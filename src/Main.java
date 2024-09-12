@@ -12,16 +12,22 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
             Menu menu = new Menu();
+            ConsommationServices consommationServices = new ConsommationServices();
 
 //            menu.ajoutConsommation();
 
 //      menu.userConsommationList();
 
-       menu.alimentation();
+//       menu.alimentation();
 
 
-        menu.calculSomImpact();
+//        menu.calculSomImpact();
 
+//        consommationServices.consommerTotalTransport(5);
+//        consommationServices.consommerTotalLogement(5);
+//        consommationServices.consommerTotalAlimentation(5);
+
+        consommationServices.consommationTotal(5);
     }
 
 

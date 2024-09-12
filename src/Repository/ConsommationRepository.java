@@ -244,23 +244,21 @@ UserRepository userRepository = new UserRepository();
 
 
 
-    private Consommation createBaseConsommation(ResultSet rs) throws SQLException {
+    private Consommation createConsommation(ResultSet rs) throws SQLException {
         int type_id = rs.getInt("type_id");
         double quantity = rs.getDouble("quantity");
         LocalDate start = rs.getDate("start_date").toLocalDate();
         LocalDate end = rs.getDate("end_date").toLocalDate();
 
         switch (type_id) {
-            case 1: // Alimentation
-                double poids = rs.getDouble("poids");
-                AlimentationType typeAliment = AlimentationType.valueOf(rs.getString("type_aliment").toUpperCase());
-                return new Alimentation(quantity, type_id, start, end, poids, typeAliment);
-
-            case 2: // Transport
+            case 1: // Transport
                 double distance = rs.getDouble("distance");
                 TransportType typeTransport = TransportType.valueOf(rs.getString("vehicule").toUpperCase());
                 return new Transport(quantity, type_id, start, end, distance, typeTransport);
-
+            case 2: // Alimentation
+                double poids = rs.getDouble("poids");
+                AlimentationType typeAliment = AlimentationType.valueOf(rs.getString("type_aliment").toUpperCase());
+                return new Alimentation(quantity, type_id, start, end, poids, typeAliment);
             case 3: // Logement
                 double consommationEnergie = rs.getDouble("consommation_energie");
                 LogementType typeLogement = LogementType.valueOf(rs.getString("type_energie").toUpperCase());
@@ -271,25 +269,29 @@ UserRepository userRepository = new UserRepository();
         }
     }
 
-    public List<Consommation> consommationsList(int user_id) {
+    public List<Consommation> consommationsList(int user_id){
         List<Consommation> consommationList = new ArrayList<>();
-
-        try {
-            Statement s = connection.connectToDB().createStatement();
-
-            // Récupérer toutes les consommations (alimentation, logement, transport)
-            String sql = "SELECT * FROM consummations WHERE user_id = " + user_id;
-            ResultSet rs = s.executeQuery(sql);
-            while (rs.next()) {
-                Consommation consommation = createBaseConsommation(rs);
-                consommationList.add(consommation);
-            }
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        Consommation consommation = null;
+        String sql = null;
+        if(consommation instanceof Alimentation){
+            sql = "SELECT * FROM alimentation WHERE user_id =" + user_id;
+        }else if(consommation instanceof Transport){
+            sql = "SELECT * FROM transport WHERE user_id =" + user_id;
+        }else if(consommation instanceof Logement){
+            sql = "SELECT * FROM logement WHERE user_id =" + user_id;
         }
 
-        return consommationList;
+        try {
+            Statement ps = connection.connectToDB().createStatement();
+            ResultSet rs = ps.executeQuery(sql);
+            while (rs.next()) {
+                consommation = createConsommation(rs);  // Create the correct instance using your helper method
+                consommationList.add(consommation);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return  consommationList;
     }
 
 }

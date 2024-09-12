@@ -39,16 +39,16 @@ public class ConsommationServices {
         return totalImpact;
     }
 */
-public double consommerTotalAlimentation(int user_id) {
-    List<Consommation> consommationList = consommationRepository.alimentationList(user_id);
-    double totalImpact = consommationList
-            .stream()
-            .filter(c -> c instanceof Alimentation) // Filtrer pour être sûr de traiter uniquement les Alimentation
-            .mapToDouble(c -> ((Alimentation) c).calculerImpact())
-            .sum();
-    System.out.println("Total impact alimentation pour l'utilisateur " + user_id + ": " + totalImpact);
-    return totalImpact;
-}
+    public double consommerTotalAlimentation(int user_id) {
+        List<Consommation> consommationList = consommationRepository.alimentationList(user_id);
+        double totalImpact = consommationList
+                .stream()
+                .filter(c -> c instanceof Alimentation) // Filtrer pour être sûr de traiter uniquement les Alimentation
+                .mapToDouble(c -> ((Alimentation) c).calculerImpact())
+                .sum();
+        System.out.println("Total impact alimentation pour l'utilisateur " + user_id + ": " + totalImpact);
+        return totalImpact;
+    }
 
     public double consommerTotalLogement(int user_id) {
         List<Consommation> consommationList = consommationRepository.logementList(user_id);
@@ -57,8 +57,38 @@ public double consommerTotalAlimentation(int user_id) {
                 .filter(c -> c instanceof Logement) // Filtrer pour être sûr de traiter uniquement les Alimentation
                 .mapToDouble(c -> ((Logement) c).calculerImpact())
                 .sum();
-        System.out.println("Total impact alimentation pour l'utilisateur " + user_id + ": " + totalImpact);
+        System.out.println("Total impact logement pour l'utilisateur " + user_id + ": " + totalImpact);
         return totalImpact;
     }
+
+    public double consommerTotalTransport(int user_id) {
+        List<Consommation> consommationList = consommationRepository.transportList(user_id);
+        double totalImpact = consommationList
+                .stream()
+                .filter(c -> c instanceof Transport) // Filtrer pour être sûr de traiter uniquement les Alimentation
+                .mapToDouble(c -> ((Transport) c).calculerImpact())
+                .sum();
+        System.out.println("Total impact transport pour l'utilisateur " + user_id + ": " + totalImpact);
+        return totalImpact;
+    }
+
+    public double consommationTotal(int user_id){
+       double consommationTotal = consommerTotalAlimentation(user_id) + consommerTotalTransport(user_id) + consommerTotalLogement(user_id);
+        System.out.println("Total :" + consommationTotal);
+        return consommationTotal;
+    }
+
+//    public void filterByConsuption() {
+//        List<User> allUsers = this.findAll();
+//        List<User> filteredUsers = allUsers
+//                .stream()
+//                .filter(e -> consomationTotal(e) > 310000)
+//                .collect(Collectors.toList());
+//        System.out.println("Utilisateurs avec une consommation totale > 31000 :");
+//        for (User user : filteredUsers) {
+//            System.out.println(user);
+//        }
+//    }
+
 
 }
