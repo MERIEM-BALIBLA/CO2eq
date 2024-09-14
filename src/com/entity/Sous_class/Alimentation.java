@@ -5,6 +5,7 @@ import com.entity.User;
 import com.entity.enums.AlimentationType;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 public class Alimentation extends Consommation {
@@ -38,11 +39,20 @@ public class Alimentation extends Consommation {
     @Override
     public double calculerImpact() {
         double impact = 0;
+        System.out.println("Type aliment: " + type_aliment + ", Poids: " + poids + ", Quantité: " + getQuantity());
+
         if (type_aliment.equals(AlimentationType.VIANDE)) {
-            return impact = poids * 0.5 * getQuantity();
+            impact = poids * 5.0 * getQuantity();  // Exemple d'augmentation du coefficient
         } else if (type_aliment == AlimentationType.LEGUME) {
-            return impact = poids * 5.0 * getQuantity();
+            impact = poids * 50.0 * getQuantity();  // Exemple d'augmentation du coefficient
         }
+
+        System.out.println("Impact calculé pour " + type_aliment + ": " + impact);
         return impact;
     }
+
+
+//    public List<LocalDate> getDaysInRange() {
+//        return DateUtils.dateListRange(getDateDebut(), getDateFin());
+//    }
 }

@@ -7,6 +7,7 @@ import com.entity.enums.LogementType;
 import com.entity.enums.TransportType;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Transport extends Consommation {
 //    private int tansport_id;
@@ -43,12 +44,28 @@ public class Transport extends Consommation {
 
     @Override
     public double calculerImpact() {
+        if (type == null) {
+            throw new IllegalStateException("Le type de transport ne peut pas être null");
+        }
         double impact = 0;
-        if(type.equals(TransportType.VOITURE)){
-            return impact=distance_parcourure*0.5*getQuantity();
-        }else if(type == TransportType.TRAIN){
-            return impact=distance_parcourure*5.0*getQuantity();
+        if (type.equals(TransportType.VOITURE)) {
+            return distance_parcourure * 0.5 * getQuantity();
+        } else if (type == TransportType.TRAIN) {
+            return distance_parcourure * 5.0 * getQuantity();
         }
         return impact;
     }
+//    public double calculerImpact() {
+//        double impact = 0;
+//        if(type.equals(TransportType.VOITURE)){
+//            return impact=distance_parcourure*0.5*getQuantity();
+//        }else if(type == TransportType.TRAIN){
+//            return impact=distance_parcourure*5.0*getQuantity();
+//        }
+//        return impact;
+//    }
+
+//    public List<LocalDate> getDaysInRange() {
+//        return DateUtils.dateListRange(getDateDebut(), getDateFin());
+//    }
 }

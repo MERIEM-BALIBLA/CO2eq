@@ -1,4 +1,5 @@
 package Services;
+
 import Repository.UserRepository;
 import com.entity.User;
 
@@ -14,6 +15,120 @@ public class UserServices {
         this.userRepository = new UserRepository();
     }
 
+    public void ajouterUtilisateur() {
+        String name = "";
+        int age = 0;
+        boolean validInput = false;
+
+        while (!validInput) {
+            System.out.println("Nom : ");
+            name = scanner.nextLine().trim();
+
+            if (name.isEmpty()) {
+                System.out.println("Le nom ne peut pas être vide. Veuillez réessayer.");
+            } else if (!name.matches("[a-zA-Z ]+")) {
+                System.out.println("Le nom ne peut contenir que des lettres et des espaces. Veuillez réessayer.");
+            } else {
+                validInput = true;
+            }
+        }
+
+        validInput = false;
+        while (!validInput) {
+            System.out.println("Âge : ");
+            if (scanner.hasNextInt()) {
+                age = scanner.nextInt();
+                scanner.nextLine(); // Consume the newline
+
+                if (age < 10 || age > 99) {
+                    System.out.println("L'âge doit être un nombre entre 18 et 99. Veuillez réessayer.");
+                } else {
+                    validInput = true;
+                }
+            } else {
+                System.out.println("Entrée invalide. Veuillez entrer un nombre entier pour l'âge.");
+                scanner.next(); // Clear the invalid input
+            }
+        }
+
+        // Création de l'utilisateur
+        User user = userRepository.addUser(name, age);
+        System.out.println("Utilisateur ajouté : " + user.getName() + ", Âge : " + user.getAge());
+    }
+    public void modifierUtilisateur() {
+        // Validation de l'ID
+        int id = -1;
+        boolean validInput = false;
+
+        while (!validInput) {
+            System.out.println("Entrez l'ID de l'utilisateur : ");
+
+            if (scanner.hasNextInt()) {
+                id = scanner.nextInt();
+                scanner.nextLine(); // Consommer la ligne restante après l'entrée de l'entier
+
+                if (id > 0) {
+                    validInput = true;
+                } else {
+                    System.out.println("L'ID doit être un nombre entier positif. Veuillez réessayer.");
+                }
+            } else {
+                System.out.println("Entrée invalide. Veuillez entrer un nombre entier pour l'ID.");
+                scanner.next(); // Ignorer l'entrée non valide pour éviter une boucle infinie
+            }
+        }
+
+        // Vérifier si l'utilisateur existe
+        Optional<User> existingUser = userRepository.getUserById(id);
+        if (existingUser.isEmpty()) {
+            System.out.println("Aucun utilisateur trouvé avec l'ID " + id + ".");
+            return;
+        }
+
+        // Validation du nom
+        String name = "";
+        validInput = false;
+
+        while (!validInput) {
+            System.out.println("Entrez le nom de l'utilisateur : ");
+            name = scanner.nextLine().trim();
+
+            if (name.isEmpty()) {
+                System.out.println("Le nom ne peut pas être vide. Veuillez réessayer.");
+            } else if (!name.matches("[a-zA-Z ]+")) {
+                System.out.println("Le nom ne peut contenir que des lettres et des espaces. Veuillez réessayer.");
+            } else {
+                validInput = true;
+            }
+        }
+
+        // Validation de l'âge
+        int age = -1;
+        validInput = false;
+
+        while (!validInput) {
+            System.out.println("Entrez l'âge de l'utilisateur : ");
+
+            if (scanner.hasNextInt()) {
+                age = scanner.nextInt();
+                scanner.nextLine(); // Consommer la ligne restante après l'entrée de l'entier
+
+                if (age >= 10 && age <= 99) {
+                    validInput = true;
+                } else {
+                    System.out.println("L'âge doit être un nombre entre 18 et 99. Veuillez réessayer.");
+                }
+            } else {
+                System.out.println("Entrée invalide. Veuillez entrer un nombre entier pour l'âge.");
+                scanner.next(); // Ignorer l'entrée non valide pour éviter une boucle infinie
+            }
+        }
+
+        // Mise à jour de l'utilisateur
+        User user = userRepository.editUser(id, name, age);
+        System.out.println("Utilisateur mis à jour : " + user.getId() + " " + user.getName() + " " + user.getAge());
+    }
+
 
     public void displayUserList() {
         List<User> users = userRepository.userList();
@@ -23,27 +138,28 @@ public class UserServices {
         }
     }
 
-    public void addUser(){
-        System.out.println("name");
-        String name = scanner.nextLine();
 
-        System.out.println("age");
-        int age = scanner.nextInt();
-        scanner.nextLine();
+//    public void addUser(){
+//        System.out.println("name");
+//        String name = scanner.nextLine();
+//
+//        System.out.println("age");
+//        int age = scanner.nextInt();
+//        scanner.nextLine();
+//
+//        User user = userRepository.addUser(name, age);
+//        System.out.println(user.getName());
+//
+//    }
 
-        User user = userRepository.addUser(name, age);
-        System.out.println(user.getName());
-
-    }
-
-    public void deleteUSer(){
+    public void deleteUSer() {
         System.out.println("user id :");
         int id = scanner.nextInt();
         scanner.nextLine();
         boolean deletedUser = userRepository.deleteUSer(id);
-        if(deletedUser){
+        if (deletedUser) {
             System.out.println("User has been deleted succesfully");
-        }else{
+        } else {
             System.out.println("User not found");
         }
 
@@ -57,22 +173,9 @@ public class UserServices {
 //        return userExists;
 //    }
 
-    public void editUser(){
 
-        System.out.println("found user first :");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-        System.out.println("set name");
-        String name = scanner.nextLine();
 
-        System.out.println("set age");
-        int age = scanner.nextInt();
-
-        User user = userRepository.editUser(id , name, age);
-        System.out.println(user.getId() + " " + user.getName() + " " + user.getAge());
-    }
-
-    public void getUser(){
+    public void getUser() {
         System.out.println("found user first :");
         int id = scanner.nextInt();
         scanner.nextLine();
@@ -88,7 +191,7 @@ public class UserServices {
         }
     }
 
-    public Optional<User> foundUser(int id){
+    public Optional<User> foundUser(int id) {
         return userRepository.getUserById(id);
     }
 }

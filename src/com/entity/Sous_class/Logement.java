@@ -6,6 +6,7 @@ import com.entity.enums.AlimentationType;
 import com.entity.enums.LogementType;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Logement extends Consommation {
     private double consommation_energie;
@@ -39,4 +40,8 @@ public class Logement extends Consommation {
         }
         return impact;
     }
+
+//    public List<LocalDate> getDaysInRange() {
+//        return DateUtils.dateListRange(getDateDebut(), getDateFin());
+//    }
 }

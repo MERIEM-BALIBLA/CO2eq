@@ -33,9 +33,10 @@ public class Connexion {
                 System.out.println("Connection error: " + e.getMessage());
                 e.printStackTrace();
             }
-        } else {
-            System.out.println("Using existing connection.");
         }
+//        else {
+//            System.out.println("Using existing connection.");
+//        }
         return connection;
     }
     // Method to close the connection
