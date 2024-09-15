@@ -8,7 +8,7 @@ import java.util.Scanner;
 import java.util.Optional;
 
 public class UserServices {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     Scanner scanner = new Scanner(System.in);
 
     public UserServices() {
@@ -52,11 +52,11 @@ public class UserServices {
         }
 
         // Création de l'utilisateur
-        User user = userRepository.addUser(name, age);
+        User user = userRepository.ajouterUtilisateur(name, age);
         System.out.println("Utilisateur ajouté : " + user.getName() + ", Âge : " + user.getAge());
     }
+
     public void modifierUtilisateur() {
-        // Validation de l'ID
         int id = -1;
         boolean validInput = false;
 
@@ -78,14 +78,12 @@ public class UserServices {
             }
         }
 
-        // Vérifier si l'utilisateur existe
         Optional<User> existingUser = userRepository.getUserById(id);
         if (existingUser.isEmpty()) {
             System.out.println("Aucun utilisateur trouvé avec l'ID " + id + ".");
             return;
         }
 
-        // Validation du nom
         String name = "";
         validInput = false;
 
@@ -102,7 +100,6 @@ public class UserServices {
             }
         }
 
-        // Validation de l'âge
         int age = -1;
         validInput = false;
 
@@ -111,7 +108,7 @@ public class UserServices {
 
             if (scanner.hasNextInt()) {
                 age = scanner.nextInt();
-                scanner.nextLine(); // Consommer la ligne restante après l'entrée de l'entier
+                scanner.nextLine();
 
                 if (age >= 10 && age <= 99) {
                     validInput = true;
@@ -120,25 +117,71 @@ public class UserServices {
                 }
             } else {
                 System.out.println("Entrée invalide. Veuillez entrer un nombre entier pour l'âge.");
-                scanner.next(); // Ignorer l'entrée non valide pour éviter une boucle infinie
+                scanner.next();
             }
         }
 
-        // Mise à jour de l'utilisateur
-        User user = userRepository.editUser(id, name, age);
+        User user = userRepository.modifierUtilisateur(id, name, age);
         System.out.println("Utilisateur mis à jour : " + user.getId() + " " + user.getName() + " " + user.getAge());
     }
 
+    public void supprimerUtilisateur() {
+        int id = -1;
+        boolean validInput = false;
+        while (!validInput) {
+            System.out.println("Entrez l'ID de l'utilisateur : ");
 
-    public void displayUserList() {
-        List<User> users = userRepository.userList();
+            if (scanner.hasNextInt()) {
+                id = scanner.nextInt();
+                scanner.nextLine(); // Consommer la ligne restante après l'entrée de l'entier
+
+                if (id > 0) {
+                    validInput = true;
+                } else {
+                    System.out.println("L'ID doit être un nombre entier positif. Veuillez réessayer.");
+                }
+            } else {
+                System.out.println("Entrée invalide. Veuillez entrer un nombre entier pour l'ID.");
+                scanner.next(); // Ignorer l'entrée non valide pour éviter une boucle infinie
+            }
+        }
+        boolean deletedUser = userRepository.supprimerUtilisateur(id);
+        if (deletedUser) {
+            System.out.println("L'utilisateur a bien été supprimé");
+        } else {
+            System.out.println("Aucun utilisateur trouvé avec l'ID " + id + ".");
+        }
+
+    }
+
+    public void utilisateurListe() {
+        List<User> users = userRepository.utilisateursListe();
         for (User user : users) {
             System.out.printf("ID: %d, Name: %s, Age: %d%n",
                     user.getId(), user.getName(), user.getAge());
         }
     }
 
+    public void utilisateurInformations() {
+        System.out.println("found user first :");
+        int id = scanner.nextInt();
+        scanner.nextLine();
 
+        Optional<User> userOptional = userRepository.getUserById(id);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            System.out.printf("ID: %d, Name: %s, Age: %d\n",
+                    user.getId(), user.getName(), user.getAge());
+        } else {
+            System.out.println("Utilisateur non trouvé.");
+        }
+    }
+
+    public Optional<User> foundUser(int id) {
+        return userRepository.getUserById(id);
+    }
+}
 //    public void addUser(){
 //        System.out.println("name");
 //        String name = scanner.nextLine();
@@ -151,47 +194,3 @@ public class UserServices {
 //        System.out.println(user.getName());
 //
 //    }
-
-    public void deleteUSer() {
-        System.out.println("user id :");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-        boolean deletedUser = userRepository.deleteUSer(id);
-        if (deletedUser) {
-            System.out.println("User has been deleted succesfully");
-        } else {
-            System.out.println("User not found");
-        }
-
-    }
-
-//    public boolean foudUser(){
-//        System.out.println("user id :");
-//        int id = scanner.nextInt();
-//        boolean userExists = userRepository.foundUser(id);
-//        System.out.println(userExists);
-//        return userExists;
-//    }
-
-
-
-    public void getUser() {
-        System.out.println("found user first :");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-
-        Optional<User> userOptional = userRepository.getUserById(id);
-
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            System.out.printf("ID: %d, Name: %s, Age: %d",
-                    user.getId(), user.getName(), user.getAge());
-        } else {
-            System.out.println("Utilisateur non trouvé.");
-        }
-    }
-
-    public Optional<User> foundUser(int id) {
-        return userRepository.getUserById(id);
-    }
-}

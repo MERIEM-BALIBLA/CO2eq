@@ -19,7 +19,7 @@ public class UserRepository {
         this.connection = Connexion.getInstance();
     }
 
-    public List<User> userList() {
+    public List<User> utilisateursListe() {
         List<User> userList = new ArrayList<>();
 
         try {
@@ -41,28 +41,28 @@ public class UserRepository {
         return userList;
     }
 
-    public List<User> getAllUsers() {
-        List<User> users = new ArrayList<>();
-        String query = "SELECT * FROM users"; // Votre requête SQL
+//    public List<User> getAllUsers() {
+//        List<User> users = new ArrayList<>();
+//        String query = "SELECT * FROM users"; // Votre requête SQL
+//
+//        try (PreparedStatement stmt = connection.connectToDB().prepareStatement(query);
+//             ResultSet rs = stmt.executeQuery()) {
+//
+//            while (rs.next()) {
+//                int id = rs.getInt("id");
+//                String name = rs.getString("name");
+//                int age = rs.getInt("age");
+//                User user = new User(id, name, age);
+//                users.add(user);
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace(); // Gérer l'exception comme vous le souhaitez
+//        }
+//        return users;
+//    }
 
-        try (PreparedStatement stmt = connection.connectToDB().prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String name = rs.getString("name");
-                int age = rs.getInt("age");
-                User user = new User(id, name, age);
-                users.add(user);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace(); // Gérer l'exception comme vous le souhaitez
-        }
-        return users;
-    }
-
-    public User addUser(String name, int age) {
+    public User ajouterUtilisateur(String name, int age) {
         User newUser = null;
         try {
             String sql = "INSERT INTO users (name, age, consommation_totale) VALUES (?, ?, ?);";
@@ -92,7 +92,7 @@ public class UserRepository {
         return false;
     }
 
-    public boolean deleteUSer(int id) {
+    public boolean supprimerUtilisateur(int id) {
         if (!foundUser(id)) {
             System.out.println("Utilisateur non trouvé.");
         }
@@ -109,7 +109,7 @@ public class UserRepository {
         return false;
     }
 
-    public User editUser(int id, String newName, int age) {
+    public User modifierUtilisateur(int id, String newName, int age) {
         if (!foundUser(id)) {
             System.out.println("Utilisateur non trouvé.");
         }

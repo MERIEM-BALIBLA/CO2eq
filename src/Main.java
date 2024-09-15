@@ -1,19 +1,15 @@
 import Repository.UserRepository;
 import Services.ConsommationServices;
 import Services.UserServices;
-import com.entity.Consommation;
-import com.entity.User;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
     private static boolean status = true;
+
     public static void main(String[] args) {
-        Menu menu = new Menu();
+        ConsommationMenu menu = new ConsommationMenu();
         ConsommationServices consommationServices = new ConsommationServices();
         UserServices userServices = new UserServices();
         UserRepository userRepository = new UserRepository();
@@ -53,7 +49,6 @@ public class Main {
 //        menu.triUserParConsommation();
 
 
-
 //        Optional<User> user = userRepository.getUserById(21);
 //        LocalDate startDate = LocalDate.of(2024, 10, 1);
 //        LocalDate endDate = LocalDate.of(2024, 10, 15);
@@ -64,8 +59,8 @@ public class Main {
             afficherMenu();
             int choix = scanner.nextInt();
             scanner.nextLine(); // Consume the newline
-
             switch (choix) {
+//  ------------------------------- > CRUD USER
                 case 1:
                     userServices.ajouterUtilisateur();
                     break;
@@ -73,9 +68,38 @@ public class Main {
                     userServices.modifierUtilisateur();
                     break;
                 case 3:
-                    userServices.deleteUSer();
+                    userServices.supprimerUtilisateur();
                     break;
                 case 4:
+                    userServices.utilisateurListe();
+                    break;
+                case 5:
+                    userServices.utilisateurInformations();
+                    break;
+//  ------------------------------- > INSERT CONSOMMATION
+                case 6:
+                    menu.ajouterConsommation();
+
+                    break;
+                case 7:
+                    menu.userConsommationList();
+                    break;
+                case 8:
+                    menu.calculSomImpact();
+                    break;
+                case 9:
+                    menu.filterConsommation();
+                    break;
+                case 10:
+                    menu.moyenneConsommationRange();
+                    break;
+                case 11:
+                    menu.userActive();
+                    break;
+                case 12:
+                    menu.triUserParConsommation();
+                    break;
+                case 13:
                     quitter();
                     break;
                 default:
@@ -84,14 +108,26 @@ public class Main {
             }
         }
     }
+
     private static void afficherMenu() {
         System.out.println("=== Menu Utilisateur ===");
         System.out.println("1. Ajouter un utilisateur");
         System.out.println("2. Modifier un utilisateur");
         System.out.println("3. Supprimer un utilisateur");
-        System.out.println("4. Quitter");
+        System.out.println("4. La liste d'utilisateurs");
+        System.out.println("5. Voir les informations d'un utilisateur specifié");
+        System.out.println("6. Ajouter une consommation pour un utilisateur");
+        System.out.println("7. Voir les consommation d'un utilisateur spécifique");
+        System.out.println("8. les impacts de consommation d'un utilisateur");
+        System.out.println("9. Affichage des utilisateurs avec un impact total > 31000KgCO2eq");
+        System.out.println("10. Calculer la consommation moyenne de carbone par utilisateur pour une période donnée.");
+        System.out.println("11. Afficher les utilisateurs n'ayant pas enregistré de consommation de carbone pendant une période spécifiée.");
+        System.out.println("12. Liste d'utilisateurs en fonction de leur consommation totale de carbone.");
+        System.out.println("13. Quitter");
         System.out.print("Choisissez une option : ");
+
     }
+
     private static void quitter() {
         System.out.println("Quitter le programme.");
         status = false;
